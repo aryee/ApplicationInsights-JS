@@ -5,6 +5,7 @@ using System.ServiceProcess;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium.Remote;
+using OpenQA.Selenium.Firefox;
 
 namespace ApplicationInsights.Javascript.Tests
 {
@@ -15,6 +16,7 @@ namespace ApplicationInsights.Javascript.Tests
     [TestClass]
     public class Tests
     {
+        private static string FirefoxPath = @"C:\Program Files\Mozilla Firefox\firefox.exe";
         public TestContext TestContext { get; set; }
 
         #region IIS express stuff
@@ -51,53 +53,63 @@ namespace ApplicationInsights.Javascript.Tests
             iisExpress = null;
         }
 
+        private RemoteWebDriver GetWebDriver()
+        {
+            FirefoxBinary ffBinary = new FirefoxBinary(FirefoxPath);
+            FirefoxProfile firefoxProfile = new FirefoxProfile();
+            FirefoxDriver driver = new FirefoxDriver(ffBinary, firefoxProfile);
+
+            return driver;
+        }
+
         #endregion
 
         [TestMethod]
         public void Firefox()
         {
-            RunTest(new OpenQA.Selenium.Firefox.FirefoxDriver(), PATH_TO_TESTS);
+            RunTest(this.GetWebDriver(), PATH_TO_TESTS);
         }
 
         [TestMethod]
         public void Firefox_CodeCoverage()
         {
+            FirefoxBinary ffBinary = new FirefoxBinary(FirefoxPath);
             var ffProfile = new OpenQA.Selenium.Firefox.FirefoxProfile();
             ffProfile.SetPreference("browser.download.dir", TestContext.TestRunResultsDirectory);
             ffProfile.SetPreference("browser.download.folderList", 2);
             ffProfile.SetPreference("browser.helperApps.neverAsk.saveToDisk", "text/plain");
 
-            RunTest(new OpenQA.Selenium.Firefox.FirefoxDriver(ffProfile), PATH_TO_TESTS, true);
+            RunTest(new OpenQA.Selenium.Firefox.FirefoxDriver(ffBinary, ffProfile), PATH_TO_TESTS, true);
         }
 
         [TestMethod]
         public void Firefox_E2E_DisableTelemetryTests()
         {
-            RunTest(new OpenQA.Selenium.Firefox.FirefoxDriver(), "/E2ETests/E2E.DisableTelemetryTests.htm");
+            RunTest(this.GetWebDriver(), "/E2ETests/E2E.DisableTelemetryTests.htm");
         }
 
         [TestMethod]
         public void Firefox_E2E_PublicApiTests()
         {
-            RunTest(new OpenQA.Selenium.Firefox.FirefoxDriver(), "/E2ETests/E2E.PublicApiTests.htm");
+            RunTest(this.GetWebDriver(), "/E2ETests/E2E.PublicApiTests.htm");
         }
 
         [TestMethod]
         public void Firefox_E2E_SanitizerE2ETests()
         {
-            RunTest(new OpenQA.Selenium.Firefox.FirefoxDriver(), "/E2ETests/E2E.SanitizerE2ETests.htm");
+            RunTest(this.GetWebDriver(), "/E2ETests/E2E.SanitizerE2ETests.htm");
         }
 
         [TestMethod]
         public void Firefox_E2E_snippetTests()
         {
-            RunTest(new OpenQA.Selenium.Firefox.FirefoxDriver(), "/E2ETests/E2E.snippetTests.htm");
+            RunTest(this.GetWebDriver(), "/E2ETests/E2E.snippetTests.htm");
         }
 
         [TestMethod]
         public void Firefox_E2E_ValidateApiTests()
         {
-            RunTest(new OpenQA.Selenium.Firefox.FirefoxDriver(), "/E2ETests/E2E.ValidateApiTests.htm");
+            RunTest(this.GetWebDriver(), "/E2ETests/E2E.ValidateApiTests.htm");
         }
 
         // Tests are failing, need to fix before we enable them.
@@ -214,7 +226,7 @@ namespace ApplicationInsights.Javascript.Tests
                 }
 
                 // Log QUnit execution details
-                /*Console.WriteLine("=== QUnit execution details ===");
+                Console.WriteLine("=== QUnit execution details ===");
                 var tests = driver.FindElementById("qunit-tests").FindElements(OpenQA.Selenium.By.XPath("./li"));
 
                 foreach(var test in tests)
@@ -243,7 +255,7 @@ namespace ApplicationInsights.Javascript.Tests
                     }
 
                     Console.WriteLine("===");
-                }*/
+                }
 
                 if (runCodeCoverage)
                 {

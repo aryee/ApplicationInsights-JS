@@ -214,7 +214,7 @@ namespace ApplicationInsights.Javascript.Tests
                 }
 
                 // Log QUnit execution details
-                Console.WriteLine("=== QUnit execution details ===");
+                /*Console.WriteLine("=== QUnit execution details ===");
                 var tests = driver.FindElementById("qunit-tests").FindElements(OpenQA.Selenium.By.XPath("./li"));
 
                 foreach(var test in tests)
@@ -226,19 +226,24 @@ namespace ApplicationInsights.Javascript.Tests
 
                     foreach(var step in steps)
                     {
-                        Console.Write(step.GetAttribute("class")+ " : ");
-                        
-                        var stepDetails = step.FindElements(OpenQA.Selenium.By.XPath("./span"));
-                        foreach(var details in stepDetails)
-                        {
-                            Console.Write(details.GetAttribute("innerHTML")+ " ");
-                        }
+                        var stepResult = step.GetAttribute("class");
 
-                        Console.WriteLine();
+                        if (stepResult == "fail")
+                        {
+                            Console.Write(stepResult + " : ");
+
+                            var stepDetails = step.FindElements(OpenQA.Selenium.By.XPath("./span"));
+                            foreach (var details in stepDetails)
+                            {
+                                Console.Write(details.GetAttribute("innerHTML") + " ");
+                            }
+
+                            Console.WriteLine();
+                        }
                     }
 
                     Console.WriteLine("===");
-                }
+                }*/
 
                 if (runCodeCoverage)
                 {

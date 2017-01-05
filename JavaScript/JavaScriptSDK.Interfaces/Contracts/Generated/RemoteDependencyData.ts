@@ -20,7 +20,7 @@ module AI
         public properties: any;
         public measurements: any;
 
-        /* Following fields should be marked as depricated in the next release, and must be removed in the subsequent breaking release */
+        /* Following fields should be marked as deprecated in the next release, and must be removed in the subsequent breaking release */
         public kind: AI.DataPointType;
         public value: number;
         public count: number;

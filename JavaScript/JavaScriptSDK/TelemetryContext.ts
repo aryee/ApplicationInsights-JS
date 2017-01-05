@@ -171,7 +171,7 @@ module Microsoft.ApplicationInsights {
             }
 
             if (!doNotSendItem) {
-                this._fixDepricatedValues(envelope);
+                this._fixDeprecatedValues(envelope);
 
                 if (envelope.name === Telemetry.Metric.envelopeType ||
                     this.sample.isSampledIn(envelope)) {
@@ -321,23 +321,23 @@ module Microsoft.ApplicationInsights {
             }
         }
 
-        private _fixDepricatedValues(envelope: Microsoft.ApplicationInsights.IEnvelope) {
+        private _fixDeprecatedValues(envelope: Microsoft.ApplicationInsights.IEnvelope) {
             try {
                 var data = (<any>envelope).data;
                 if (data && data.baseType === Microsoft.ApplicationInsights.Telemetry.RemoteDependencyData.dataType) {
                     var rddData = <Microsoft.ApplicationInsights.Telemetry.RemoteDependencyData>(<any>data.baseData);
                     if (rddData) {
-                        this._fixRDDDepricatedValues(rddData);
+                        this._fixRDDDeprecatedValues(rddData);
                     }
                 }
             } catch (e) {
                 _InternalLogging.throwInternalNonUserActionable(LoggingSeverity.WARNING,
-                    new _InternalLogMessage(_InternalMessageId.NONUSRACT_FailedToFixDepricatedValues, "Failed to parse the base data object, to fix the depricated values " + Util.getExceptionName(e),
+                    new _InternalLogMessage(_InternalMessageId.NONUSRACT_FailedToFixDeprecatedValues, "Failed to parse the base data object, to fix the deprecated values " + Util.getExceptionName(e),
                         { exception: Util.dump(e) }));
             }
         }
 
-        private _fixRDDDepricatedValues(rddData: Microsoft.ApplicationInsights.Telemetry.RemoteDependencyData) {
+        private _fixRDDDeprecatedValues(rddData: Microsoft.ApplicationInsights.Telemetry.RemoteDependencyData) {
             if (rddData.commandName) {
                 rddData.data = rddData.commandName;
                 rddData.commandName = undefined;

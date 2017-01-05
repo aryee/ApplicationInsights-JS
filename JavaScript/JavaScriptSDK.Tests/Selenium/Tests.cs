@@ -66,7 +66,7 @@ namespace ApplicationInsights.Javascript.Tests
             ffProfile.SetPreference("browser.download.folderList", 2);
             ffProfile.SetPreference("browser.helperApps.neverAsk.saveToDisk", "text/plain");
 
-            return new FirefoxDriver(ffProfile);
+            return new FirefoxDriver(new FirefoxBinary(), ffProfile, TimeSpan.FromSeconds(180));
         }
 
         [TestMethod]
@@ -151,7 +151,7 @@ namespace ApplicationInsights.Javascript.Tests
         //[TestMethod]
         public void FirefoxPerf()
         {
-            RunPerfTest(new OpenQA.Selenium.Firefox.FirefoxDriver());
+            RunPerfTest(new OpenQA.Selenium.Firefox.FirefoxDriver(new FirefoxBinary(), new FirefoxProfile(), TimeSpan.FromSeconds(180)));
         }
 
         //[TestMethod]

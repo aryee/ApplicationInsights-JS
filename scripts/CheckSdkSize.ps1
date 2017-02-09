@@ -25,10 +25,10 @@ $aiSize = (Get-Item $ai).Length;
 $aiMinSize = (Get-Item $aiMin).Length;
 $aiMinZipSize = (Get-Item $aiMinZip).Length;
 
-Write-Host "==== JS SDK size ==="
-Write-Host "ai.js: $aiSize bytes"
-Write-Host "ai.min.js: $aiMinSize bytes"
-Write-Host "ai.min.zip: $aiMinZipSize bytes"
+Write-Host ==== JS SDK size ===
+Write-Host ai.js: $aiSize bytes
+Write-Host ai.min.js: $aiMinSize bytes
+Write-Host ai.min.zip: $aiMinZipSize bytes
 
 $currentDir = Get-Location;
 $aiDll = Join-Path $currentDir -ChildPath "Microsoft.ApplicationInsights.dll";
@@ -42,14 +42,22 @@ $metrics.Add('ai', $aiSize);
 $metrics.Add('ai.min', $aiMinSize);
 $metrics.Add('a.min.zip', $aiMinZipSize);
 
-$telemetry.TrackEvent("JsSdkSize", $null, $metrics);
-$telemetry.Flush();
+Try 
+{
+    $telemetry.TrackEvent("JsSdkSize", $null, $metrics);
+    $telemetry.Flush();
+}
+Catch
+{
+    Write-Host Failed to send telemetry. Error: $_.Exception.Message;
+}
 
-$MAX_SDK_SIZE = 25 * 1025; # size in bytes
+$MAX_SDK_SIZE = 25 * 1024; # size in bytes
 
-If($aiMinZipSize -ge $MAX_SDK_SIZE) {
-    Write-Host "JS SDK library is too big (minimized+zipped): $aiMinZipSize bytes, max allowed size: $MAX_SDK_SIZE bytes"
-    Write-Host "Please contact kszostak@microsoft.com or the ChuckNorris team to increase the threashold."
+If($aiMinZipSize -ge $MAX_SDK_SIZE) 
+{
+    Write-Host JS SDK library is too big (minimized+zipped): $aiMinZipSize bytes, max allowed size: $MAX_SDK_SIZE bytes
+    Write-Host Please contact kszostak@microsoft.com or the ChuckNorris team to increase the threashold.
 
     throw "SDK too big";
     exit 1;
